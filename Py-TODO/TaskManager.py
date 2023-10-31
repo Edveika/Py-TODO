@@ -87,15 +87,23 @@ class TaskManager:
         load_archive()
 
     # Adds a new task to self.tasks and .db tasks
-    def add_task(task):
-        pass
+    def add_task(self, task: Task):
+        # Add the task to the task list
+        self.tasks.append(task)
+        self.db.execute(f"INSERT INTO tasks(title, description) VALUES({task.get_task_name()}, {task.get_description()})")
 
     # Adds a task to self.archive and .db archives when the task is completed
-    def archive_task(task):
-        pass
+    def archive_task(self, task: Task):
+        # Add the task to archive list
+        self.archive.append(task)
+        # Insert task into archive table
+        self.db.execute(f"INSERT INTO archive(title, description) VALUES({task.get_task_name()}, {task.get_description()})")
+        # Remove from tasks table
+        self.db.execute(f"DELETE FROM tasks WHERE title={task.get_task_name()} and description={task.get_description()}")
     
     # Deletes the task from .db when the task gets removed from archive
-    def delete_task(task):
-        pass
-
-tasker = TaskManager()
+    def delete_task(self, task: Task):
+        # Remove task from the archive list
+        self.archive.remove(task)
+        # Remove archive from archive table
+        self.db.execute(f"DELETE FROM archive WHERE title={task.get_task_name()} and description={task.get_description()}")
