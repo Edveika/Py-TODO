@@ -107,3 +107,11 @@ class TaskManager:
         self.archive.remove(task)
         # Remove archive from archive table
         self.db.execute(f"DELETE FROM archive WHERE title={task.get_task_name()} and description={task.get_description()}")
+
+    # Returns a list of tasks
+    def get_tasks(self):
+        return self.tasks
+    
+    # Returns a list of archived tasks that the user completed
+    def get_archive(self):
+        return self.archive
