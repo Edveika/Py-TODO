@@ -4,7 +4,6 @@ class Task:
     def __init__(self, task_name):
         self.task_name = task_name
         self.description = None
-        self.id = id
 
     def set_task_name(self, name):
         self.task_name = name
