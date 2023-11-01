@@ -101,6 +101,8 @@ class TaskManager:
 
     # Adds a task to self.archive and .db archives when the task is completed
     def archive_task(self, task: Task):
+        # Remove task from ongoing task list
+        self.tasks.remove(task)
         # Add the task to archive list
         self.archive.append(task)
         # Query that inserts task into archive
