@@ -30,7 +30,7 @@ class GUIManager:
         # Initializes new task window
         self.init_new_task_win()
         # Initializes task settings window
-        self.init_settings_win()
+        self.init_task_settings_win()
 
     # Main window of the program, shows current and completed tasks
     def main_window(self):
@@ -178,7 +178,7 @@ class GUIManager:
             self.task_settings_window.hide()
 
     # Initializes settings window elements
-    def init_settings_win(self):
+    def init_task_settings_win(self):
         self.task_settings_window = self.builder.get_object("task_settings_window")
         self.task_settings_window.connect("delete-event", self.hide_window, None)
         self.builder.get_object("btn_settings_complete").connect("clicked", self.complete_task)
