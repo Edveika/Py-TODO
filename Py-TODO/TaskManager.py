@@ -99,6 +99,20 @@ class TaskManager:
         # Commits changes made in memory to disk
         self.con.commit()
 
+    # Updates the current task with a new task in memory and db
+    def update_task(self, old_task: Task, new_task: Task):
+        # Query that will update the values in db
+        query = "UPDATE tasks SET title=?, description=? WHERE title=?"
+        # Values to be inserted into query
+        values = (new_task.get_task_name(), new_task.get_description(), old_task.get_task_name())
+        # Query executed in memory
+        self.db.execute(query, values)
+        # Write changes into disk
+        self.con.commit()
+        # Update task with new task in memory
+        old_task.set_task_name(new_task.get_task_name())
+        old_task.set_description(new_task.get_description())
+
     # Adds a task to self.archive and .db archives when the task is completed
     def archive_task(self, task: Task):
         # Remove task from ongoing task list
@@ -108,16 +122,14 @@ class TaskManager:
         # Query that inserts task into archive
         query = "INSERT INTO archive(title, description) VALUES(?, ?)"
         # Values that are going to be inserted
-        values = (task.get_task_name(), task.get_description)
+        values = (task.get_task_name(), task.get_description())
         # Insert task into archive table
         self.db.execute(query, values)
-        # Saves db into disk
-        self.con.commit()
 
         # Query that removes a task from the task table after it was moved to archives table
-        query = "DELETE FROM tasks WHERE title=? and description=?"
+        query = "DELETE FROM tasks WHERE title=?"
         # Values to be removed
-        values = (task.get_task_name(), task.get_description())
+        values = (task.get_task_name(),)
         # Remove from tasks table
         self.db.execute(query, values)
         # Write changes to file
@@ -128,9 +140,9 @@ class TaskManager:
         # Remove task from the archive list
         self.archive.remove(task)
         # Query that removes archive from archives table
-        query = "DELETE FROM archive WHERE title=? and description=?"
+        query = "DELETE FROM archive WHERE title=?"
         # Values to be removed
-        values = (task.get_task_name(), task.get_description())
+        values = (task.get_task_name(), )
         # Remove archive from archive table
         self.db.execute(query, values)
         # Save changes to disk
@@ -157,3 +169,15 @@ class TaskManager:
         for task in self.archive:
             titles.append(task.get_task_name())
         return titles
+    
+    # Returns a task object from title
+    def get_task_from_title(self, title):
+        for task in self.tasks:
+            if title == task.get_task_name():
+                return task
+            
+    # Returns archive object(type Task) from title
+    def get_archive_from_title(self, title):
+        for archive in self.archive:
+            if title == archive.get_task_name():
+                return archive
