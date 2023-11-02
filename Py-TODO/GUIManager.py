@@ -224,7 +224,7 @@ class GUIManager:
                         task = self.task_manager.get_task_from_title(title)
                         # Load task's information into listboxes so the user knows which task he opened
                         title_entry = self.builder.get_object("settings_title_entr")
-                        desc_entry = self.builder.get_object("settings_desc_entr")
+                        desc_entry = self.builder.get_object("settings_desc_entr").set_text("")
                         title_entry.set_text(title)
                         if task.get_description():
                             desc_entry.set_text(task.get_description())
