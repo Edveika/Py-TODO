@@ -29,6 +29,8 @@ class GUIManager:
 
         # Initializes new task window
         self.init_new_task_win()
+        # Initializes task settings window
+        self.init_settings_win()
 
     # Main window of the program, shows current and completed tasks
     def main_window(self):
@@ -59,7 +61,7 @@ class GUIManager:
         load_listbox_data(self.task_manager.get_archive(), self.archive_listbox)
 
         # Handles double click events on the messagebox rows
-        # self.task_listbox.connect("button-press-event", self.listbox_double_click, self.task_settings_window)
+        self.task_listbox.connect("button-press-event", self.listbox_double_click, self.task_settings_window)
         # self.archive_listbox.connect("button-press-event", self.listbox_double_click, self.archive_settings_window)
 
         # Shows the window and starts the GTK main loop
@@ -124,61 +126,88 @@ class GUIManager:
         self.new_task_window.connect("delete-event", self.hide_window, reset_entry)
         self.builder.get_object("btn_add_task").connect("clicked", self.add_task, reset_entry)
 
-    def task_settings_window(self, row):
-        def hide_window(widget, event):
-            widget.hide()
-            return True
-        
-        window = self.builder.get_object("task_settings_window")
-        window.connect("delete-event", hide_window)
-
-        title = row.get_child().get_text()
-        task = self.task_manager.get_task_from_title(title)
-
-        title_entry = self.builder.get_object("settings_title_entr")
-        desc_entry = self.builder.get_object("settings_desc_entr")
-        title_entry.set_text(title)
-        if task.get_description():
-            desc_entry.set_text(task.get_description())
-
-        def complete_task(btn):
-            nonlocal self
-            nonlocal task
-
+    # Moves task into archives when complete button is pressed, refreshes listboxes
+    def complete_task(self, button):
+        row = self.get_cur_listbox_row()
+        if row:
+            # Get task from title
+            title = row.get_child().get_text()
+            task = self.task_manager.get_task_from_title(title)
+            
+            # Move row from task listbox to archive listbox, because it is completed
             self.task_listbox.remove(row)
             self.task_listbox.show_all()
             self.archive_listbox.add(row)
             self.archive_listbox.show_all()
+            # Move task to archives in memory and sql db
             self.task_manager.archive_task(task)
-            window.hide()
+            # Hide the window
+            self.task_settings_window.hide()
 
-        self.builder.get_object("btn_settings_complete").connect("clicked", complete_task)
-
-        def save_settings(btn):
-            nonlocal task
-            nonlocal self
+    # Applies changes to the task when user clicks save
+    def save_settings(self, button):
+        row = self.get_cur_listbox_row()
+        if row:
+            # Get current values: title, desc entry, create new task
+            title_entry = self.builder.get_object("settings_title_entr")
+            desc_entry = self.builder.get_object("settings_desc_entr")
+            title = row.get_child().get_text()
+            task = self.task_manager.get_task_from_title(title)
             new_task = Task(title_entry.get_text())
-            new_task.set_description(desc_entry.get_text())
+            if desc_entry.get_text():
+                new_task.set_description(desc_entry.get_text())
 
+            # If the user didnt change anything, prompt him
             if task.get_task_name() == new_task.get_task_name() and task.get_description() == new_task.get_description():
                 self.show_message_box("Nothing was changed")
-                window.hide()
-            else:
-                row.get_child().set_text(title_entry.get_text())
-                self.task_listbox.show_all()
-                self.task_manager.update_task(task, new_task)
-                window.hide()
-            return True
+                self.task_settings_window.hide()
+                return
+            # If user deleted the title, prompt him
+            elif task.get_task_name() == "":
+                self.show_message_box("Title cannot be empty")
+                self.task_settings_window.hide()
+                return
+            
+            # Update listbox string value
+            row.get_child().set_text(title_entry.get_text())
+            # Show it
+            self.task_listbox.show_all()
+            # Update the task values in memory and sql db
+            self.task_manager.update_task(task, new_task)
+            # Hide the window when we are done
+            self.task_settings_window.hide()
 
-        self.builder.get_object("btn_save_stngs").connect("clicked", save_settings)
+    # Initializes settings window elements
+    def init_settings_win(self):
+        self.task_settings_window = self.builder.get_object("task_settings_window")
+        self.task_settings_window.connect("delete-event", self.hide_window, None)
+        self.builder.get_object("btn_settings_complete").connect("clicked", self.complete_task)
+        self.builder.get_object("btn_save_stngs").connect("clicked", self.save_settings)
 
-        window.show_all()
-
-    # Handles double click events, opens settings for the tasks
+    # Handles double click events, loads window data, opens settings for the tasks
     def listbox_double_click(self, listbox, event, window):
         if event.type == Gdk.EventType._2BUTTON_PRESS:
-            row = listbox.get_selected_row()
-            #window(row)
+            self.row = listbox.get_selected_row()
+            # Depending on the window that is going to be shown, will do some initialization
+            match window:
+                # If we are opening the task settings window
+                case self.task_settings_window:
+                    # Get task from title
+                    title = self.row.get_child().get_text()
+                    task = self.task_manager.get_task_from_title(title)
+                    # Load task's information into listboxes so the user knows which task he opened
+                    title_entry = self.builder.get_object("settings_title_entr")
+                    desc_entry = self.builder.get_object("settings_desc_entr")
+                    title_entry.set_text(title)
+                    if task.get_description():
+                        desc_entry.set_text(task.get_description())
+                case _:
+                    return
+            window.show_all()
+
+    # Returns currently selected(double clicked) listbox row
+    def get_cur_listbox_row(self):
+        return self.row
 
     # Makes a label out of text and adds it to the listbox
     def text_to_listbox(self, listbox, text):
