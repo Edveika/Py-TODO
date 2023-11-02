@@ -31,6 +31,8 @@ class GUIManager:
         self.init_new_task_win()
         # Initializes task settings window
         self.init_task_settings_win()
+        # Initializes archive settings window
+        self.init_archive_settings_win()
 
     # Main window of the program, shows current and completed tasks
     def main_window(self):
@@ -62,7 +64,7 @@ class GUIManager:
 
         # Handles double click events on the messagebox rows
         self.task_listbox.connect("button-press-event", self.listbox_double_click, self.task_settings_window)
-        # self.archive_listbox.connect("button-press-event", self.listbox_double_click, self.archive_settings_window)
+        self.archive_listbox.connect("button-press-event", self.listbox_double_click, self.archive_settings_window)
 
         # Shows the window and starts the GTK main loop
         window.show_all()
@@ -184,26 +186,60 @@ class GUIManager:
         self.builder.get_object("btn_settings_complete").connect("clicked", self.complete_task)
         self.builder.get_object("btn_save_stngs").connect("clicked", self.save_settings)
 
+    # Deletes archive from archive memory list and db
+    def delete_archive(self, button):
+        row = self.get_cur_listbox_row()
+        if row:
+            # Get archive from title
+            title = row.get_child().get_text()
+            archive = self.task_manager.get_archive_from_title(title)
+            # Delete archive from memory and db
+            self.task_manager.delete_task(archive)
+            # Remove it from listbox and refresh it
+            self.archive_listbox.remove(row)
+            self.archive_listbox.show_all()
+            # Hide the window
+            self.archive_settings_window.hide()
+
+    # Initializes archive settings window elements
+    def init_archive_settings_win(self):
+        self.archive_settings_window = self.builder.get_object("archive_settings_window")
+        self.archive_settings_window.connect("delete-event", self.hide_window, None)
+        self.settings_archive_title = self.builder.get_object("archive_settings_title")
+        self.settings_archive_desc = self.builder.get_object("archive_settings_desc")
+        self.btn_archive_del = self.builder.get_object("btn_archive_del").connect("clicked", self.delete_archive)
+
     # Handles double click events, loads window data, opens settings for the tasks
     def listbox_double_click(self, listbox, event, window):
         if event.type == Gdk.EventType._2BUTTON_PRESS:
             self.row = listbox.get_selected_row()
-            # Depending on the window that is going to be shown, will do some initialization
-            match window:
-                # If we are opening the task settings window
-                case self.task_settings_window:
-                    # Get task from title
-                    title = self.row.get_child().get_text()
-                    task = self.task_manager.get_task_from_title(title)
-                    # Load task's information into listboxes so the user knows which task he opened
-                    title_entry = self.builder.get_object("settings_title_entr")
-                    desc_entry = self.builder.get_object("settings_desc_entr")
-                    title_entry.set_text(title)
-                    if task.get_description():
-                        desc_entry.set_text(task.get_description())
-                case _:
-                    return
-            window.show_all()
+            # If user selected a valid row
+            if self.row:
+                title = self.row.get_child().get_text()
+                # Depending on the window that is going to be shown, will do some initialization
+                match window:
+                    # If we are opening the task settings window
+                    case self.task_settings_window:
+                        # Get task from title
+                        task = self.task_manager.get_task_from_title(title)
+                        # Load task's information into listboxes so the user knows which task he opened
+                        title_entry = self.builder.get_object("settings_title_entr")
+                        desc_entry = self.builder.get_object("settings_desc_entr")
+                        title_entry.set_text(title)
+                        if task.get_description():
+                            desc_entry.set_text(task.get_description())
+                        # If we are opening archive settings window
+                    case self.archive_settings_window:
+                        # Get archive from title
+                        archive = self.task_manager.get_archive_from_title(title)
+                        # Load archive's information into labels
+                        self.settings_archive_title.set_text(title)
+                        if archive.get_description():
+                            self.settings_archive_desc.set_text(archive.get_description())
+                    case _:
+                        return
+                # Show the window
+                window.show_all()
 
     # Returns currently selected(double clicked) listbox row
     def get_cur_listbox_row(self):
