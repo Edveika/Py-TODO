@@ -2,6 +2,62 @@
 <!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
+  <object class="GtkWindow" id="archive_settings_window">
+    <property name="can-focus">False</property>
+    <property name="title" translatable="yes">Archive settings</property>
+    <property name="default-width">300</property>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="homogeneous">True</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">label</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">label</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton">
+            <property name="label" translatable="yes">Delete</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="halign">center</property>
+            <property name="margin-top">10</property>
+            <property name="margin-bottom">10</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
   <object class="GtkWindow" id="main_window">
     <property name="can-focus">False</property>
     <property name="default-height">500</property>
@@ -10,7 +66,7 @@
         <property name="visible">True</property>
         <property name="can-focus">False</property>
         <child>
-          <!-- n-columns=1 n-rows=2 -->
+          <!-- n-columns=1 n-rows=1 -->
           <object class="GtkGrid" id="main_task_grid">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
@@ -26,9 +82,6 @@
                 <property name="top-attach">0</property>
               </packing>
             </child>
-            <child>
-              <placeholder/>
-            </child>
           </object>
           <packing>
             <property name="name">page0</property>
@@ -36,7 +89,7 @@
           </packing>
         </child>
         <child>
-          <!-- n-columns=1 n-rows=2 -->
+          <!-- n-columns=1 n-rows=1 -->
           <object class="GtkGrid" id="main_archive_grid">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
@@ -51,9 +104,6 @@
                 <property name="left-attach">0</property>
                 <property name="top-attach">0</property>
               </packing>
-            </child>
-            <child>
-              <placeholder/>
             </child>
           </object>
           <packing>
@@ -90,13 +140,126 @@
   <object class="GtkWindow" id="new_task_window">
     <property name="can-focus">False</property>
     <child>
-      <placeholder/>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkEntry" id="entry_title">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="xalign">0.5</property>
+            <property name="placeholder-text" translatable="yes">Ttle</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkEntry" id="entry_desc">
+            <property name="height-request">90</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="xalign">0.5</property>
+            <property name="placeholder-text" translatable="yes">Description</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+      </object>
+    </child>
+    <child type="titlebar">
+      <object class="GtkHeaderBar" id="main_headerbar1">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="title" translatable="yes">New task</property>
+        <property name="show-close-button">True</property>
+        <child>
+          <object class="GtkButton" id="btn_add_task">
+            <property name="label" translatable="yes">Add</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+          </object>
+        </child>
+      </object>
     </child>
   </object>
   <object class="GtkWindow" id="task_settings_window">
     <property name="can-focus">False</property>
     <child>
-      <placeholder/>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkEntry" id="settings_title_entr">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="xalign">0.5</property>
+            <property name="placeholder-text" translatable="yes">Ttle</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkEntry" id="settings_desc_entr">
+            <property name="height-request">90</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="xalign">0.5</property>
+            <property name="placeholder-text" translatable="yes">Description</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="btn_settings_complete">
+            <property name="label" translatable="yes">Completed</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="halign">center</property>
+            <property name="margin-top">10</property>
+            <property name="margin-bottom">10</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+    <child type="titlebar">
+      <object class="GtkHeaderBar" id="main_headerbar2">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="title" translatable="yes">Task settings</property>
+        <property name="show-close-button">True</property>
+        <child>
+          <object class="GtkButton" id="btn_save_stngs">
+            <property name="label" translatable="yes">Save</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+          </object>
+        </child>
+      </object>
     </child>
   </object>
 </interface>
