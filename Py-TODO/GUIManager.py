@@ -164,7 +164,7 @@ class GUIManager:
                 return
             # If user deleted the title, prompt him
             elif task.get_task_name() == "":
-                self.show_message_box("Title cannot be empty")
+                self.show_message_box("Task title must not be empty")
                 self.task_settings_window.hide()
                 return
             
