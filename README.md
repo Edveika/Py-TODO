@@ -15,6 +15,11 @@ This is a simple TODO application I decided to make because I wanted to play aro
 * SQLite database - to store your progress :)
 * Gtk GUI(Graphical User Interface)
 
+# Dependencies
+
+``PyGTK``
+``Sqlite``
+
 # License
 
 This project is licensed under the GPL v2 [LICENSE](LICENSE).
