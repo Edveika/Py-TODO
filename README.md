@@ -18,6 +18,7 @@ This is a simple TODO application I decided to make because I wanted to play aro
 # Dependencies
 
 ``PyGTK``
+
 ``Sqlite``
 
 # License
