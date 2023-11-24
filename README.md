@@ -1,4 +1,4 @@
-# Py-TODO
+# 🗒️ Py-TODO
 
 This is a simple TODO application I decided to make because I wanted to play around with Gtk, Python and SQL. It features basic functionality like adding, archiving and removing tasks, a GUI interface for doing just that and a SQLite database to store all of the task data.
 
@@ -6,7 +6,7 @@ This is a simple TODO application I decided to make because I wanted to play aro
 
 ![Screenshot from 2023-11-03 01-29-19](https://github.com/Edveika/Py-TODO/assets/113787144/62c21755-13c6-4486-b796-66170aa5413c)
 
-# Features
+# 🔥 Features
 * Adding tasks
   * Task name
   * Task description
@@ -15,12 +15,12 @@ This is a simple TODO application I decided to make because I wanted to play aro
 * SQLite database - to store your progress :)
 * Gtk GUI(Graphical User Interface)
 
-# Dependencies
+# 🔑 Dependencies
 
 ``PyGTK``
 
 ``Sqlite``
 
-# License
+# 📜 License
 
 This project is licensed under the GPL v2 [LICENSE](LICENSE).
