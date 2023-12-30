@@ -15,11 +15,24 @@ This is a simple TODO application I decided to make because I wanted to play aro
 * SQLite database - to store your progress :)
 * Gtk GUI(Graphical User Interface)
 
-# 🔑 Dependencies
+# 📔 Libraries used
 
-``PyGTK``
+* PyGTK 3.0 and higher
+* sqlite3
+* os
 
-``Sqlite``
+# 🏃 Running the application
+
+* Using python's interpreter inside Py-TODO/Py-TODO/ dir:
+
+```
+python3 Application.py
+```
+
+⚠️ TODO
+
+* .exe and .appimages binaries
+* Due to law of locality the New task button should be at the bottom of the current tasks list 
 
 # 📜 License
 
